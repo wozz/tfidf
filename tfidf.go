@@ -5,6 +5,9 @@ import (
 	"math"
 )
 
+// Document is used to represent a pre-tokenized document as a slice of strings
+type Document []string
+
 const sep = " "
 
 // TFIDF holds info to calculate the TFIDF scores
@@ -26,8 +29,8 @@ func New() *TFIDF {
 }
 
 // AddDocs updates the TFIDF struct with the doc info. each doc should already be
-// tokenized and represented as a []string
-func (f *TFIDF) AddDocs(docs ...[]string) {
+// tokenized and represented as a Document
+func (f *TFIDF) AddDocs(docs ...Document) {
 	for _, doc := range docs {
 		h := hash(doc)
 		if f.docHashPos(h) >= 0 {
@@ -51,7 +54,7 @@ func (f *TFIDF) AddDocs(docs ...[]string) {
 }
 
 // Cal calculates tf-idf weight for specified document
-func (f *TFIDF) Cal(doc []string) (weight map[string]float64) {
+func (f *TFIDF) Cal(doc Document) (weight map[string]float64) {
 	weight = make(map[string]float64)
 
 	var termFreq map[string]int
@@ -74,7 +77,7 @@ func (f *TFIDF) Cal(doc []string) (weight map[string]float64) {
 	return weight
 }
 
-func (f *TFIDF) termFreq(doc []string) (m map[string]int) {
+func (f *TFIDF) termFreq(doc Document) (m map[string]int) {
 	m = make(map[string]int)
 
 	for _, term := range doc {
@@ -92,11 +95,11 @@ func (f *TFIDF) docHashPos(hash uint64) int {
 	return -1
 }
 
-func (f *TFIDF) docPos(doc []string) int {
+func (f *TFIDF) docPos(doc Document) int {
 	return f.docHashPos(hash(doc))
 }
 
-func hash(doc []string) uint64 {
+func hash(doc Document) uint64 {
 	h := fnv.New64a()
 	for _, term := range doc {
 		h.Write([]byte(term))

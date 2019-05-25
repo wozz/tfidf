@@ -19,7 +19,7 @@ func TestSaveLoadEmpty(t *testing.T) {
 
 func TestSaveLoadWithDocs(t *testing.T) {
 	f := New()
-	f.AddDocs([]string{"a", "b"}, []string{"b", "c"})
+	f.AddDocs(Document{"a", "b"}, Document{"b", "c"})
 	b, err := f.Save()
 	if err != nil {
 		t.Fatalf("could not save: %v", err)
@@ -31,8 +31,8 @@ func TestSaveLoadWithDocs(t *testing.T) {
 	if f.n != f2.n {
 		t.Error("saved/loaded not same")
 	}
-	cal1 := f.Cal([]string{"a"})
-	cal2 := f2.Cal([]string{"a"})
+	cal1 := f.Cal(Document{"a"})
+	cal2 := f2.Cal(Document{"a"})
 	acal1, ok := cal1["a"]
 	if !ok {
 		t.Error("calculation incorrect, missing val")
